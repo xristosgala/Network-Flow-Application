@@ -245,5 +245,4 @@ html_path = os.path.abspath(static_map_path)
 with open(html_path, "r") as file:
     html_content = file.read()
 
-# Serve the map as an iframe
 st.components.v1.html(html_content, width=700, height=500)
