@@ -46,7 +46,8 @@ pos = {
 }
 
 # Initialize ORS client (You would use your actual API key here)
-api_key = "5b3ce3597851110001cf6248767bcf5a42874bb4b85b5b5c0bfac601"  # Replace with the actual key
+# Access the API key securely from Streamlit secrets
+api_key = st.secrets["api_key"]
 client = openrouteservice.Client(key=api_key)
 
 # Function to calculate travel time
@@ -188,10 +189,6 @@ for u, v in graph.edges():
     # Create a unique identifier for this supplier (factories or warehouses)
     if supply_point not in supply_colors:
         supply_colors[supply_point] = generate_random_color()
-
-    # Initialize ORS client (You would use your actual API key here)
-    api_key = "5b3ce3597851110001cf6248767bcf5a42874bb4b85b5b5c0bfac601"  # Replace with the actual key
-    client = openrouteservice.Client(key=api_key)
 
     # Get route data from ORS
     try:
