@@ -8,7 +8,6 @@ from streamlit_folium import st_folium
 from openrouteservice import Client
 import random
 import os
-from IPython.display import IFrame
 
 st.title("Optimiized Transportation Allocation System and Route Mapping App")
 st.header("1. Upload Your Datasets")
