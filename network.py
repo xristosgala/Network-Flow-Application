@@ -190,6 +190,10 @@ for u, v in graph.edges():
     if supply_point not in supply_colors:
         supply_colors[supply_point] = generate_random_color()
 
+    # Access the API key securely from Streamlit secrets
+    api_key = st.secrets["api_key"]
+    client = openrouteservice.Client(key=api_key)
+
     # Get route data from ORS
     try:
         # Get coordinates for the supply and demand points
