@@ -8,6 +8,7 @@ from streamlit_folium import st_folium
 from openrouteservice import Client
 import random
 import os
+from IPython.display import IFrame
 
 st.title("Optimiized Transportation Allocation System and Route Mapping App")
 st.header("1. Upload Your Datasets")
@@ -72,7 +73,6 @@ def get_travel_time(start, end):
         else:
             return None
     except Exception as e:
-        print(f"Error processing route from {start} to {end}: {e}")
         return None
 
 # Add edges to the graph with travel time
@@ -114,7 +114,7 @@ for u, v in graph.edges():
 problem.solve()
 
 # Display status of the optimization problem
-st.write("Problem Status")
+print("Problem Status")
 
 if LpStatus[problem.status] == "Optimal":
     st.success(f"Status: {LpStatus[problem.status]}")
@@ -135,8 +135,8 @@ def generate_random_color():
 all_locations = list(pos.values())
 
 # Calculate the average latitude and longitude
-avg_lat = sum([location[1] for location in all_locations]) / len(all_locations)
-avg_lon = sum([location[0] for location in all_locations]) / len(all_locations)
+avg_lat = sum([location[0] for location in all_locations]) / len(all_locations)
+avg_lon = sum([location[1] for location in all_locations]) / len(all_locations)
 
 # Create a folium map centered at the calculated midpoint
 mymap = folium.Map(location=[avg_lat, avg_lon], zoom_start=12, tiles='CartoDB positron')
@@ -145,7 +145,7 @@ mymap = folium.Map(location=[avg_lat, avg_lon], zoom_start=12, tiles='CartoDB po
 supply_point_num = 1
 for factory in factories:
     folium.Marker(
-        location=[pos[factory][1], pos[factory][0]],  # Latitude, Longitude for folium
+        location=[pos[factory][0], pos[factory][1]],  # Latitude, Longitude for folium
         popup=f"Supplier {factory}",
         icon=folium.Icon(color='blue', icon='info-sign')
     ).add_to(mymap)
@@ -155,7 +155,7 @@ for factory in factories:
 warehouse_point_num = 1
 for warehouse in warehouses:
     folium.Marker(
-        location=[pos[warehouse][1], pos[warehouse][0]],  # Latitude, Longitude for folium
+        location=[pos[warehouse][0], pos[warehouse][1]],  # Latitude, Longitude for folium
         popup=f"Warehouse {warehouse}",
         icon=folium.Icon(color='orange', icon='info-sign')
     ).add_to(mymap)
@@ -165,7 +165,7 @@ for warehouse in warehouses:
 demand_point_num = 1
 for client in clients:
     folium.Marker(
-        location=[pos[client][1], pos[client][0]],  # Latitude, Longitude for folium
+        location=[pos[client][0], pos[client][1]],  # Latitude, Longitude for folium
         popup=f"Client {client}",
         icon=folium.Icon(color='green', icon='info-sign')
     ).add_to(mymap)
@@ -197,8 +197,8 @@ for u, v in graph.edges():
     # Get route data from ORS
     try:
         # Get coordinates for the supply and demand points
-        supply_coords = (pos[supply_point][1], pos[supply_point][0])  # (latitude, longitude)
-        demand_coords = (pos[demand_point][1], pos[demand_point][0])  # (latitude, longitude)
+        supply_coords = (pos[supply_point][1], pos[supply_point][0])  
+        demand_coords = (pos[demand_point][1], pos[demand_point][0])  
 
         # Fetch route from OpenRouteService
         route = client.directions(
@@ -213,7 +213,7 @@ for u, v in graph.edges():
             route_coords = route['features'][0]['geometry']['coordinates']
 
             # Convert route coordinates to (lat, lon) for folium
-            route_coords = [(coord[1], coord[0]) for coord in route_coords]  # (Latitude, Longitude)
+            route_coords = [(coord[1], coord[0]) for coord in route_coords] 
 
             # Prepare popup content for the route
             popup_content = f"<b>Route from {supply_point} to {demand_point}</b><br>"
@@ -233,6 +233,7 @@ for u, v in graph.edges():
             print(f"No route found for {supply_point} and {demand_point}")
     except Exception as e:
         print(f"Error processing route for {supply_point} and {demand_point}: {e}")
+
 
 # Save the map to an HTML file
 static_map_path = "static_map.html"
