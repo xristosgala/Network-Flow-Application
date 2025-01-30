@@ -113,8 +113,8 @@ $$
 | C1   | 40.69467636963053  | 22.84927806764901  |
 
 ### Nodes Data (`nodes.csv`):
-|    Type   | Node ||
-|-----------|------|-|
+|    Type   | Node |
+|-----------|------|
 |  Factory  |  F1  |
 |  Factory  |  F2  |
 | Warehouse |  W1  |
