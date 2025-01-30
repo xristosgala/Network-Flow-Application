@@ -17,7 +17,7 @@ This Streamlit-based web application optimizes transportation allocation and vis
 ## Mathematical Formulation
 
 ### Index Definitions
-- $i,j,k \in V where V = F \cup W \cup C$ -> Nodes in the Network
+- $i,j,k \in V \where V = F \cup W \cup C$ -> Nodes in the Network
 - $i \in F$ -> Factories (supply nodes)
 - $j \in W$ -> Warehouses (warehouse nodes)
 - $k \in C$ -> Store (store nodes)
