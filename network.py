@@ -29,7 +29,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
     edges = [(row['source'], row['destination'], {"capacity": row['capacity'], "cost": row['cost']}) for _, row in edges_df.iterrows()]
     factories = nodes_df[nodes_df["Type"] == "Factory"]["Node"].tolist()
     warehouses = nodes_df[nodes_df["Type"] == "Warehouse"]["Node"].tolist()
-    clients = nodes_df[nodes_df["Type"] == "Client"]["Node"].tolist()
+    stores = nodes_df[nodes_df["Type"] == "Stores"]["Node"].tolist()
     pos = {row["Node"]: (row["Latitude"], row["Longitude"]) for _, row in coordinates_df.iterrows()}
     supply = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Supply"].iterrows()}
     demand = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Demand"].iterrows()}
@@ -89,11 +89,11 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
     
     # Warehouse flow balance constraint
     for warehouse in warehouses:
-        problem += lpSum([edge_flows[(f, warehouse)] for f in factories]) == lpSum([edge_flows[(warehouse, c)] for c in clients]), f"Balance_{warehouse}"
+        problem += lpSum([edge_flows[(f, warehouse)] for f in factories]) == lpSum([edge_flows[(warehouse, c)] for c in stores]), f"Balance_{warehouse}"
     
     # Client demand constraints
-    for client in clients:
-        problem += lpSum([edge_flows[(u, client)] for u in graph.predecessors(client)]) == demand[client], f"Demand_{client}"
+    for store in stores:
+        problem += lpSum([edge_flows[(u, store)] for u in graph.predecessors(store)]) == demand[store], f"Demand_{store}"
     
     # Edge capacity constraints
     for u, v in graph.edges():
@@ -121,7 +121,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
         def generate_random_color():
             return "#{:02x}{:02x}{:02x}".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         
-        # Calculate the midpoint of all supply (factories, warehouses) and demand (clients) coordinates dynamically
+        # Calculate the midpoint of all supply (factories, warehouses) and demand (stores) coordinates dynamically
         all_locations = list(pos.values())
         
         # Calculate the average latitude and longitude
@@ -151,12 +151,12 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
             ).add_to(mymap)
             warehouse_point_num += 1
         
-        # Add demand points (clients) to the map
+        # Add demand points (stores) to the map
         demand_point_num = 1
-        for client in clients:
+        for store in stores:
             folium.Marker(
-                location=[pos[client][0], pos[client][1]],  # Latitude, Longitude for folium
-                popup=f"Client {client}",
+                location=[pos[store][0], pos[store][1]],  # Latitude, Longitude for folium
+                popup=f"Client {store}",
                 icon=folium.Icon(color='green', icon='info-sign')
             ).add_to(mymap)
             demand_point_num += 1
@@ -164,13 +164,13 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
         # Initialize supply_colors dictionary
         supply_colors = {}
         
-        # Fetch and draw routes between supply (factories) and demand (clients)
+        # Fetch and draw routes between supply (factories) and demand (stores)
         for u, v in graph.edges():
             # Check if the edge connects a supply point (factory or warehouse) to a demand point (client)
-            if u in factories + warehouses and v in clients:
+            if u in factories + warehouses and v in stores:
                 supply_point = u
                 demand_point = v
-            elif v in factories + warehouses and u in clients:
+            elif v in factories + warehouses and u in stores:
                 supply_point = v
                 demand_point = u
             else:
