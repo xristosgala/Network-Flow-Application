@@ -9,30 +9,62 @@ from openrouteservice import Client
 import random
 import os
 
-st.title("Optimiized Transportation Allocation System and Route Mapping App")
-st.header("1. Upload Your Datasets")
+#st.title("Optimiized Transportation Allocation System and Route Mapping App")
+#st.header("1. Upload Your Datasets")
 
 # Upload the three CSV files
-edges_data = st.file_uploader("Choose the Edges Data CSV file", type=["csv"])
-nodes_data = st.file_uploader("Choose the Nodes Data CSV file", type=["csv"])
-coordinates_data = st.file_uploader("Choose the Coordinates Data CSV file", type=["csv"])
-demand_supply_data = st.file_uploader("Choose the Demand/Supply Data CSV file", type=["csv"])
+#edges_data = st.file_uploader("Choose the Edges Data CSV file", type=["csv"])
+#nodes_data = st.file_uploader("Choose the Nodes Data CSV file", type=["csv"])
+#coordinates_data = st.file_uploader("Choose the Coordinates Data CSV file", type=["csv"])
+#demand_supply_data = st.file_uploader("Choose the Demand/Supply Data CSV file", type=["csv"])
 
 if edges_data is not None and nodes_data is not None and coordinates_data is not None and demand_supply_data is not None:
     # Load the datasets
-    edges_df = pd.read_csv(edges_data)
-    nodes_df = pd.read_csv(nodes_data)
-    coordinates_df = pd.read_csv(coordinates_data)
-    demand_supply_df = pd.read_csv(demand_supply_data)
+#    edges_df = pd.read_csv(edges_data)
+#    nodes_df = pd.read_csv(nodes_data)
+#    coordinates_df = pd.read_csv(coordinates_data)
+#    demand_supply_df = pd.read_csv(demand_supply_data)
 
     #Transform the dataframes into meaningful structures
-    edges = [(row['source'], row['destination'], {"capacity": row['capacity'], "cost": row['cost']}) for _, row in edges_df.iterrows()]
-    factories = nodes_df[nodes_df["Type"] == "Factory"]["Node"].tolist()
-    warehouses = nodes_df[nodes_df["Type"] == "Warehouse"]["Node"].tolist()
-    clients = nodes_df[nodes_df["Type"] == "Client"]["Node"].tolist()
-    pos = {row["Node"]: (row["Latitude"], row["Longitude"]) for _, row in coordinates_df.iterrows()}
-    supply = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Supply"].iterrows()}
-    demand = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Demand"].iterrows()}
+#    edges = [(row['source'], row['destination'], {"capacity": row['capacity'], "cost": row['cost']}) for _, row in edges_df.iterrows()]
+#    factories = nodes_df[nodes_df["Type"] == "Factory"]["Node"].tolist()
+#    warehouses = nodes_df[nodes_df["Type"] == "Warehouse"]["Node"].tolist()
+#    clients = nodes_df[nodes_df["Type"] == "Client"]["Node"].tolist()
+#    pos = {row["Node"]: (row["Latitude"], row["Longitude"]) for _, row in coordinates_df.iterrows()}
+#    supply = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Supply"].iterrows()}
+#    demand = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Demand"].iterrows()}
+
+    # Define nodes
+    factories = ['F1', 'F2']
+    warehouses = ['W1', 'W2']
+    clients = ['C1', 'C2', 'C3']
+    
+    # Define edges (factories can supply clients directly or via warehouse)
+    edges = [
+        ("F1", "W1", {"capacity": 20, "cost": 3}),
+        ("F2", "W1", {"capacity": 100, "cost": 4}),
+        ("F1", "W2", {"capacity": 50, "cost": 5}),
+        ("F2", "W2", {"capacity": 50, "cost": 2}),
+        ("F1", "C1", {"capacity": 30, "cost": 7}),  # Direct Factory → Client
+        ("F2", "C3", {"capacity": 20, "cost": 4}),  # Direct Factory → Client
+        ("W1", "C1", {"capacity": 50, "cost": 2}),
+        ("W1", "C2", {"capacity": 50, "cost": 3}),
+        ("W1", "C3", {"capacity": 50, "cost": 5}),
+        ("W2", "C1", {"capacity": 50, "cost": 6}),
+        ("W2", "C2", {"capacity": 50, "cost": 5}),
+        ("W2", "C3", {"capacity": 50, "cost": 2}),
+    ]
+    
+    # Coordinates
+    pos = {
+        'F1': (40.683872441380615, 22.885431620059066), 'F2': (40.65914244328182, 22.930129674916987),
+        'W1': (40.682035715304806, 22.79503301938996), 'W2': (40.66904206130231, 22.93526513852292),
+        'C1': (40.67563535503701, 22.938596579347777), 'C2': (40.6780147307032, 22.900261496603854), 'C3': (40.69467636963053, 22.84927806764901)
+    }
+
+    # Define supply (factories) and demand (clients)
+    supply = {'F1': 50, 'F2': 50}
+    demand = {'C1': 30, 'C2': 10, 'C3': 60}
 
     st.success("All files uploaded successfully!")
     
