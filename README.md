@@ -15,6 +15,13 @@ This Streamlit-based web application optimizes transportation allocation and vis
 - **Interactive Map Visualization:** Displays optimized routes using **Folium**.
 
 ## Mathematical Formulation
+
+### Index Definitions
+- $i$,$j$,$k$ -> Nodes in the Network
+- $i$ \in F -> Factories (supply nodes)
+- $j$ \in W -> Warehouses (warehouse nodes)
+- $k$ \in C -> Store (store nodes)
+- $(i,j)$ \in Directed edges in the network
 ### Decision Variables:
 Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
 
@@ -34,14 +41,13 @@ $$
 
 ### Constraints:
 
-1. **Supply Constraint (Factories can’t ship more than they produce):**
+1. **Supply Constraint** (Factories can’t ship more than they produce):
 
 $$
 \sum_{j \in V} x_{ij} \leq S_i \quad \forall i \in F
 $$
 
-2. **Demand Constraints:**
-   Ensure that the total amount delivered to each demand point satisfies the demand:
+2. **Flow Conservation at Warehouses** (Total inflow = Total outflow):
 
 $$
 \sum_{i=1}^{m} \sum_{k=1}^{p} x_{ijk} = D_j \quad \forall j
