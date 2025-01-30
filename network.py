@@ -29,9 +29,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
     edges = [(row['source'], row['destination'], {"capacity": row['capacity'], "cost": row['cost']}) for _, row in edges_df.iterrows()]
     factories = nodes_df[nodes_df["Type"] == "Factory"]["Node"].tolist()
     warehouses = nodes_df[nodes_df["Type"] == "Warehouse"]["Node"].tolist()
-    st.write(warehouses)
     stores = nodes_df[nodes_df["Type"] == "Store"]["Node"].tolist()
-    st.write(stores)
     pos = {row["Node"]: (row["Latitude"], row["Longitude"]) for _, row in coordinates_df.iterrows()}
     supply = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Supply"].iterrows()}
     demand = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Demand"].iterrows()}
