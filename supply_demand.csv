@@ -1,0 +1,6 @@
+Node,Type,Quantity
+F1,Supply,50
+F2,Supply,50
+S1,Demand,30
+S2,Demand,10
+S3,Demand,60
