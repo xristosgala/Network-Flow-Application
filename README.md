@@ -69,66 +69,66 @@ $$
 5. **Non-Negativity Constraint:**
 
 $$
-x_{ij} \geq 0 \quad \forall i, j \in E
+x_{ij} \geq 0 \quad \forall (i,j) \in E
 $$
 
-### Solving the Model:
-The problem is solved using **PuLP**'s **LpProblem** method, which uses available solvers (e.g., CBC) to find the optimal solution.
+## Technologies
+- Python (NetworkX, PuLP, Pandas)
+- Streamlit (Web UI)
+- OpenRouteService API (Travel time estimation)
+- Folium (Map visualization)
 
-### Map Visualization:
-The application utilizes **Folium** to plot supply and demand points on a map, with routes between them drawn dynamically based on the optimized allocations. The **OpenRouteService API** is used to fetch travel times and distances between points.
+## Usage
+- Upload CSV files for edges, nodes, coordinates, and demand/supply.
+- View optimized transportation costs and flow allocation.
+- Explore an interactive map with optimized routes.
 
-## How to Use:
+## Sample Data Files:
 
-1. **Upload Your Data:** Upload the CSV files containing your **supply**, **demand**, **driver**, and **cost** data. The system expects data to include location coordinates (for mapping) and relevant values for optimization.
-   
-2. **View Results:** Once the model is solved, the application displays:
-   - The allocation of drivers to supply-demand pairs.
-   - The total transportation cost.
-   - Dual values and slack values for constraints.
-   - An interactive map showing the optimized routes.
+### Edges Data (`edges.csv`):
+| source | destination | capacity | cost |
+|--------|-------------|----------|------|
+| F1     | W1          | 20       | 3    |
+| F2     | W1          | 100      | 4    |
+| F1     | W2          | 50       | 3    |
+| F2     | W2          | 50       | 4    |
+| F1     | C1          | 30       | 7    |
+| F2     | C3          | 20       | 4    |
+| W1     | C1          | 50       | 2    |
+| W1     | C2          | 50       | 3    |
+| W1     | C3          | 50       | 5    |
+| W1     | C1          | 50       | 6    |
+| W2     | C2          | 50       | 5    |
+| W3     | C3          | 50       | 2    |
 
-3. **Download Map:** You can view the generated map, which visually represents the transportation routes between supply and demand locations.
+### Coordinates Data (`coordinates.csv`):
+| Node |     Latitude       | Longitude |
+|------|--------------------|----------|
+| F1   | 40.683872441380615 | 22.885431620059066 |
+| F2   | 40.65914244328182  | 22.930129674916987 |
+| W1   | 40.682035715304806 | 22.79503301938996  |
+| W2   | 40.66904206130231  | 22.93526513852292  |
+| C1   | 40.67563535503701  | 22.938596579347777 |
+| C2   | 40.6780147307032   | 22.900261496603854 |
+| C1   | 40.69467636963053  | 22.84927806764901  |
 
-## Requirements:
-- **Python 3.x**
-- **Streamlit**
-- **Pandas**
-- **OpenRouteService**
-- **PuLP**
-- **Folium**
-- **OpenRouteService API Key**
+### Nodes Data (`nodes.csv`):
+|    Type   | Node ||
+|-----------|------|-|
+|  Factory  |  F1  |
+|  Factory  |  F2  |
+| Warehouse |  W1  |
+| Warehouse |  W2  |
+|   Client  |  C1  |
+|   Client  |  C2  |
+|   Client  |  C3  |
 
-## Example Data Format:
-
-### Supply Data (`supply_data.csv`):
-| Location | Latitude  | Longitude | Supply |
-|----------|-----------|-----------|--------|
-| Supply1  | 34.0522   | -118.2437 | 50     |
-| Supply2  | 36.7783   | -119.4179 | 60     |
-
-### Demand Data (`demand_data.csv`):
-| Location | Latitude  | Longitude | Demand |
-|----------|-----------|-----------|--------|
-| client1  | 34.0522   | -118.2437 | 40     |
-| client2  | 36.7783   | -119.4179 | 50     |
-
-### Driver Data (`driver_data.csv`):
-| DriverID | Working Hours  | Max Load (units) |
-|----------|----------------|------------------|
-| Driver1  | 10             | 8                |
-| Driver2  | 15             | 10               |
-
-### Cost Data (`cost_data.csv`):
-| Client1 | Client2 | Client3 |
-|---------|---------|---------|
-| 200     | 100     | 150     |
-| 300     | 120     | 140     |
-
-
-## Acknowledgments
-- **PuLP** for Linear Programming formulation.
-- **OpenRouteService** for travel time and distance calculation.
-- **Folium** for map visualization.
-- **Stramlit** for web app deployment.
+### Supply Demand Data (`supply_demand.csv`):
+| Node |  Type  | Quantity |
+|------|--------|----------|
+| F1   | Supply |  50      |
+| F2   | Supply |  50      |
+| C1   | Demand |  30      |
+| C2   | Demand |  10      |
+| C3   | Demand |  60      |
 
