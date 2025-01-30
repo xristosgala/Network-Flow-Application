@@ -9,14 +9,14 @@ from openrouteservice import Client
 import random
 import os
 
-#st.title("Optimiized Transportation Allocation System and Route Mapping App")
-#st.header("1. Upload Your Datasets")
+st.title("Optimiized Transportation Allocation System and Route Mapping App")
+st.header("1. Upload Your Datasets")
 
 # Upload the three CSV files
-#edges_data = st.file_uploader("Choose the Edges Data CSV file", type=["csv"])
-#nodes_data = st.file_uploader("Choose the Nodes Data CSV file", type=["csv"])
-#coordinates_data = st.file_uploader("Choose the Coordinates Data CSV file", type=["csv"])
-#demand_supply_data = st.file_uploader("Choose the Demand/Supply Data CSV file", type=["csv"])
+edges_data = st.file_uploader("Choose the Edges Data CSV file", type=["csv"])
+nodes_data = st.file_uploader("Choose the Nodes Data CSV file", type=["csv"])
+coordinates_data = st.file_uploader("Choose the Coordinates Data CSV file", type=["csv"])
+demand_supply_data = st.file_uploader("Choose the Demand/Supply Data CSV file", type=["csv"])
 
 if edges_data is not None and nodes_data is not None and coordinates_data is not None and demand_supply_data is not None:
     # Load the datasets
