@@ -4,7 +4,7 @@
 
 This Streamlit-based web application optimizes transportation allocation and visualizes supply chain routes using network flow optimization and OpenRouteService for route mapping.
 
-👉 **Try the app here:** [Network Flow Application]https://network-flow-application-etusnj3g5vv6xtt9txckl3.streamlit.app/
+👉 **Try the app here:** [Network Flow Application](https://network-flow-application-etusnj3g5vv6xtt9txckl3.streamlit.app/)
 
 ---
 
