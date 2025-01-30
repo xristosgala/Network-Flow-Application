@@ -11,6 +11,7 @@ import os
 
 st.title("Network Flow Application")
 st.header("1. Upload Your Datasets")
+st.write("hello")
 
 # Upload the three CSV files
 edges_data = st.file_uploader("Choose the Edges Data CSV file", type=["csv"])
@@ -30,6 +31,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
     factories = nodes_df[nodes_df["Type"] == "Factory"]["Node"].tolist()
     warehouses = nodes_df[nodes_df["Type"] == "Warehouse"]["Node"].tolist()
     stores = nodes_df[nodes_df["Type"] == "Store"]["Node"].tolist()
+    st.write(stores)
     pos = {row["Node"]: (row["Latitude"], row["Longitude"]) for _, row in coordinates_df.iterrows()}
     supply = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Supply"].iterrows()}
     demand = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Demand"].iterrows()}
