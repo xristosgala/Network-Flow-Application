@@ -1,25 +1,22 @@
-# Network Flow Application
+# 🚛Network Flow Application
 
 ## Overview
 
-This system implements a **Transportation Allocation Problem** using **Linear Programming (LP)** to optimize the transportation of goods while minimizing costs. It incorporates multiple constraints such as supply limits, demand satisfaction, driver hours, and capacity limits, all to ensure that the transportation system runs efficiently. The problem is solved using **PuLP** (a Python library for LP problems) and results are visualized using **Streamlit** for an interactive web-based experience. Additionally, the solution includes **route mapping** for visualizing supply-demand connections. The app can be accessed via this link: 
+This Streamlit-based web application optimizes transportation allocation and visualizes supply chain routes using network flow optimization and OpenRouteService for route mapping.
 
-👉 **Try the app here:** [Optimized Transportation Allocation System and Route Mapping](https://optimized-transportation-allocation-system-and-route-mapping.streamlit.app)
+👉 **Try the app here:** [https://network-optimization-s9asz9csh3tlxpucyz7rp4.streamlit.app/]
 
 ---
 
 ## Features
-- **Data Upload:** Users can upload four CSV files containing **supply data**, **demand data**, **driver data**, and **cost data**.
-- **Optimization Model:** The system formulates and solves an LP model that minimizes transportation costs while satisfying all constraints (e.g., supply, demand, working hours, and capacity).
-- **Route Mapping:** Visualizes the routes from supply points to demand points on a map with real-time driving distances/times, using the **OpenRouteService API**.
-- **Driver Allocation:** Displays how each driver is allocated to specific deliveries, respecting the constraints like working hours and maximum load capacity.
-- **Duals and Slacks:** Outputs the duals and slacks for each constraint to analyze the optimization.
+- **Data Upload:** Upload Data: Supports CSV files for **edges**, **nodes**, **coordinates**, and **demand/supply**.
+- **Network Flow Optimization:** Uses PuLP to minimize transportation cost while ensuring supply-demand balance.
+- **Route Mapping:** Integrates **OpenRouteService API** to compute real-time travel times.
+- **Interactive Map Visualization:** Displays optimized routes using **Folium**.
 
 ## Mathematical Formulation (Linear Programming Model)
 
-Let:
-
-- $S_i$ is the supply at supply point $i$, for $i = 1, 2, \dots, m$.
+Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
 - $D_j$ is the demand at demand point $j$, for $j = 1, 2, \dots, n$.
 - $C_{ij}$ is the cost of transporting from supply point $i$ to demand point $j$.
 - $x_{ijk}$ is the quantity of goods transported from supply point $i$ to demand point $j$ by driver $k$.
