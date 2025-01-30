@@ -4,7 +4,7 @@
 
 This Streamlit-based web application optimizes transportation allocation and visualizes supply chain routes using network flow optimization and OpenRouteService for route mapping.
 
-👉 **Try the app here:** [https://network-optimization-s9asz9csh3tlxpucyz7rp4.streamlit.app/]
+👉 **Try the app here:** https://network-optimization-s9asz9csh3tlxpucyz7rp4.streamlit.app/
 
 ---
 
@@ -14,26 +14,22 @@ This Streamlit-based web application optimizes transportation allocation and vis
 - **Route Mapping:** Integrates **OpenRouteService API** to compute real-time travel times.
 - **Interactive Map Visualization:** Displays optimized routes using **Folium**.
 
-## Mathematical Formulation (Linear Programming Model)
-
-Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
-- $D_j$ is the demand at demand point $j$, for $j = 1, 2, \dots, n$.
-- $C_{ij}$ is the cost of transporting from supply point $i$ to demand point $j$.
-- $x_{ijk}$ is the quantity of goods transported from supply point $i$ to demand point $j$ by driver $k$.
-- $y_{ijk}$ is a binary variable indicating whether driver $k$ delivers goods from supply point $i$ to demand point $j$.
-- $T_{ij}$ is the travel time (in hours) from supply point $i$ to demand point $j$.
-- $H_k$ is the maximum working hours available for driver $k$.
-- $Q_k$ is the maximum load capacity for driver $k$.
-
+## Mathematical Formulation
 ### Decision Variables:
-- $x_{ijk}$: Continuous decision variable representing the quantity delivered by driver $k$ from supply point $i$ to demand point $j$.
-- $y_{ijk}$: Binary decision variable representing whether driver $k$ is assigned to deliver from supply point $i$ to demand point $j$.
+Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
 
+### Paremeters
+- $c_{ij}$ = Cost per unit flow from node $i$ to node $j$.
+- $t_{ij} = Travel time from node $i$ to node $j$.
+- $s_i$ = Supply available at node $i$ ($i$ is a factory).
+- $d_j$ = Demand required at node $j$ ($j$ is a store).
+- $u_{ij} = Capacity of the edge between $i$ and $j$.
+- 
 ### Objective Function:
-Minimize the total transportation cost:
+Minimize the total transportation cost, considering both travel time and cost:
 
 $$
-\min Z = \sum_{i=1}^{m} \sum_{j=1}^{n} \sum_{k=1}^{p} x_{ijk} \cdot C_{ij}
+\min Z = \sum_{i,j}^{m} \sum_{j=1}^{n} \sum_{k=1}^{p} x_{ijk} \cdot C_{ij}
 $$
 
 ### Constraints:
