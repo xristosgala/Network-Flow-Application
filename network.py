@@ -137,7 +137,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
         for factory in factories:
             folium.Marker(
                 location=[pos[factory][0], pos[factory][1]],  # Latitude, Longitude for folium
-                popup=f"Supplier {factory}",
+                popup=f"Factory {factory}",
                 icon=folium.Icon(color='blue', icon='info-sign')
             ).add_to(mymap)
             supply_point_num += 1
@@ -161,69 +161,52 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
                 icon=folium.Icon(color='green', icon='info-sign')
             ).add_to(mymap)
             demand_point_num += 1
-        
-        # Initialize supply_colors dictionary
-        supply_colors = {}
-        
-        # Fetch and draw routes between supply (factories) and demand (stores)
-        for u, v in graph.edges():
-            # Check if the edge connects a supply point (factory or warehouse) to a demand point (store)
-            if u in factories + warehouses and v in stores:
-                supply_point = u
-                demand_point = v
-            elif v in factories + warehouses and u in stores:
-                supply_point = v
-                demand_point = u
-            else:
-                continue  # Skip if the edge doesn't connect supply to demand
             
-            # Create a unique identifier for this supplier (factories or warehouses)
-            if supply_point not in supply_colors:
-                supply_colors[supply_point] = generate_random_color()
+        # Define colors for different route types
+        route_colors = {
+            "factory_to_warehouse": "blue",
+            "warehouse_to_store": "orange",
+            "factory_to_store": "green",
+        }
         
-            # Access the API key securely from Streamlit secrets
-            api_key = st.secrets["api_key"]
-            client = openrouteservice.Client(key=api_key)
+        # Determine route type and assign color
+        for u, v in graph.edges():
+            if u in factories and v in warehouses:
+                route_type = "factory_to_warehouse"
+            elif u in warehouses and v in stores:
+                route_type = "warehouse_to_store"
+            elif u in factories and v in stores:
+                route_type = "factory_to_store"
+            else:
+                continue  # Skip unexpected cases
         
-            # Get route data from ORS
+            route_color = route_colors[route_type]
+        
+            # Fetch route and draw on map (use existing OpenRouteService logic)
             try:
-                # Get coordinates for the supply and demand points
-                supply_coords = (pos[supply_point][1], pos[supply_point][0])  
-                demand_coords = (pos[demand_point][1], pos[demand_point][0])  
+                supply_coords = (pos[u][1], pos[u][0])  
+                demand_coords = (pos[v][1], pos[v][0])  
         
-                # Fetch route from OpenRouteService
                 route = client.directions(
                     coordinates=[supply_coords, demand_coords],
                     profile='driving-car',
                     format='geojson'
                 )
         
-                # Check if the response contains routes
                 if 'features' in route and len(route['features']) > 0:
-                    # Extract coordinates of the route
                     route_coords = route['features'][0]['geometry']['coordinates']
+                    route_coords = [(coord[1], coord[0]) for coord in route_coords]
         
-                    # Convert route coordinates to (lat, lon) for folium
-                    route_coords = [(coord[1], coord[0]) for coord in route_coords] 
-        
-                    # Prepare popup content for the route
-                    popup_content = f"<b>Route from {supply_point} to {demand_point}</b><br>"
-        
-                    # Use the preassigned color for this supplier
-                    route_color = supply_colors[supply_point]
-        
-                    # Add the route to the map
                     folium.PolyLine(
                         locations=route_coords,
                         color=route_color,
                         weight=3,
                         opacity=0.8,
-                        popup=folium.Popup(popup_content, max_width=300)
+                        popup=f"Route from {u} to {v}"
                     ).add_to(mymap)
-                else:
-                    print(f"No route found for {supply_point} and {demand_point}")
             except Exception as e:
-                print(f"Error processing route for {supply_point} and {demand_point}: {e}")
+                print(f"Error processing route for {u} and {v}: {e}")
+
         
         
         # Save the map to an HTML file
