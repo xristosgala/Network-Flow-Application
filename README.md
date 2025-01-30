@@ -37,7 +37,7 @@ $$
 1. **Supply Constraint (Factories can’t ship more than they produce):**
 
 $$
-\sum_{j} x_{ij} \leq S_i \quad \forall i
+\sum_{j \in V} x_{ij} \leq S_i \quad \forall i \in F
 $$
 
 2. **Demand Constraints:**
