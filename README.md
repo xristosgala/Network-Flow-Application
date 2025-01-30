@@ -17,7 +17,7 @@ This Streamlit-based web application optimizes transportation allocation and vis
 ## Mathematical Formulation
 
 ### Index Definitions
-- $i,j,k$ -> Nodes in the Network
+- $i,j,k \in V$ -> Nodes in the Network
 - $i \in F$ -> Factories (supply nodes)
 - $j \in W$ -> Warehouses (warehouse nodes)
 - $k \in C$ -> Store (store nodes)
@@ -54,25 +54,22 @@ $$
 \sum_{i \in F} x_{ij} = \sum_{k \in C} D_{j,k} \quad \forall j \in W
 $$
 
-3. **Driver Working Hours:**
-   Ensure that the total time spent by each driver does not exceed their available working hours:
+3. **Demand Constraint** (Clients must receive exact demand):
 
 $$
-\sum_{i=1}^{m} \sum_{j=1}^{n} y_{ijk} \cdot T_{ij} \leq H_k \quad \forall k
+\sum_{i \in V} x_{ik}  = D_k \quad \forall k \in C
 $$
 
-4. **Driver Capacity:**
-   Ensure that the total quantity delivered by each driver does not exceed their load capacity:
+4. **Capacity Constraint** (Edges cannot exceed their max capacity):
 
 $$
-x_{ijk} \leq Q_k \quad \forall i, j, k
+x_{ij} \leq U_ij \quad \forall (i,j) \in E
 $$
 
-5. **Link between $x_{ijk}$ and $y_{ijk}$:**
-   Ensure that $x_{ijk} > 0$ only if driver $k$ is assigned to the route from supply point $i$ to demand point $j$:
+5. **Non-Negativity Constraint:**
 
 $$
-x_{ijk} \leq y_{ijk} \cdot D_j \quad \forall i, j, k
+x_{ij} \geq 0 \quad \forall i, j \in E
 $$
 
 ### Solving the Model:
