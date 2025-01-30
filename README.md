@@ -18,7 +18,7 @@ This Streamlit-based web application optimizes transportation allocation and vis
 
 ### Index Definitions
 - $i$,$j$,$k$ -> Nodes in the Network
-- $i$ \in F -> Factories (supply nodes)
+- $i \in F$ -> Factories (supply nodes)
 - $j$ \in W -> Warehouses (warehouse nodes)
 - $k$ \in C -> Store (store nodes)
 - $(i,j)$ \in Directed edges in the network
