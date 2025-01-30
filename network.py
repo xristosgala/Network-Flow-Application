@@ -163,14 +163,14 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
         # Define colors for different route types
         route_colors = {
             "factory_to_warehouse": "blue",
-            "warehouse_to_store": "orange",
-            "factory_to_store": "green",
+            "warehouse_to_store": "green",
+            "factory_to_store": "orange",
         }
         
         # Normalize flow values for line thickness
         max_flow = max(edge_flows[(u, v)].varValue for u, v in graph.edges() if edge_flows[(u, v)].varValue > 0)
         min_thickness = 2
-        max_thickness = 8
+        max_thickness = 6
         
         # Iterate over each edge in the graph
         for u, v in graph.edges():
