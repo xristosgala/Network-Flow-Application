@@ -17,11 +17,12 @@ This Streamlit-based web application optimizes transportation allocation and vis
 ## Mathematical Formulation
 
 ### Index Definitions
-- $i$,$j$,$k$ -> Nodes in the Network
+- $i,j,k$ -> Nodes in the Network
 - $i \in F$ -> Factories (supply nodes)
-- $j$ \in W -> Warehouses (warehouse nodes)
-- $k$ \in C -> Store (store nodes)
-- $(i,j)$ \in Directed edges in the network
+- $j \in W$ -> Warehouses (warehouse nodes)
+- $k \in C$ -> Store (store nodes)
+- $(i,j) \in E$ -> Directed edges in the network
+
 ### Decision Variables:
 Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
 
@@ -31,12 +32,12 @@ Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
 - $s_i$ = Supply available at node $i$ ($i$ is a factory).
 - $d_j$ = Demand required at node $j$ ($j$ is a store).
 - $u_{ij}$ = Capacity of the edge between $i$ and $j$.
-- 
+
 ### Objective Function:
 Minimize the total transportation cost, considering both travel time and cost:
 
 $$
-\min Z = \sum_{(i,j)} x_{ij} \cdot c_{ij} \cdot t_{ij}
+\min Z = \sum_{(i,j) \in E} x_{ij} \cdot c_{ij} \cdot t_{ij}
 $$
 
 ### Constraints:
@@ -50,7 +51,7 @@ $$
 2. **Flow Conservation at Warehouses** (Total inflow = Total outflow):
 
 $$
-\sum_{i=1}^{m} \sum_{k=1}^{p} x_{ijk} = D_j \quad \forall j
+\sum_{i \in F} x_{ij} = \sum_{k \in C} D_{j,k} \quad \forall j \in W
 $$
 
 3. **Driver Working Hours:**
