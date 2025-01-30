@@ -20,22 +20,21 @@ Let $x_{ij}$ be the flow of goods from node $i$ to node $j$.
 
 ### Paremeters
 - $c_{ij}$ = Cost per unit flow from node $i$ to node $j$.
-- $t_{ij} = Travel time from node $i$ to node $j$.
+- $t_{ij}$ = Travel time from node $i$ to node $j$.
 - $s_i$ = Supply available at node $i$ ($i$ is a factory).
 - $d_j$ = Demand required at node $j$ ($j$ is a store).
-- $u_{ij} = Capacity of the edge between $i$ and $j$.
+- $u_{ij}$ = Capacity of the edge between $i$ and $j$.
 - 
 ### Objective Function:
 Minimize the total transportation cost, considering both travel time and cost:
 
 $$
-\min Z = \sum_{i,j}^{m} \sum_{j=1}^{n} \sum_{k=1}^{p} x_{ijk} \cdot C_{ij}
+\min Z = \sum_{(i,j)} x_{ij} \cdot c_{ij} \cdot t_{ij}
 $$
 
 ### Constraints:
 
-1. **Supply Constraints:**
-   Ensure that the total amount delivered from each supply point does not exceed the supply:
+1. **Supply Constraint (Factories can’t ship more than they produce):**
 
 $$
 \sum_{j=1}^{n} \sum_{k=1}^{p} x_{ijk} \leq S_i \quad \forall i
