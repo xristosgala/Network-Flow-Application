@@ -156,7 +156,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
         for store in stores:
             folium.Marker(
                 location=[pos[store][0], pos[store][1]],  # Latitude, Longitude for folium
-                popup=f"Client {store}",
+                popup=f"Store {store}",
                 icon=folium.Icon(color='green', icon='info-sign')
             ).add_to(mymap)
             demand_point_num += 1
@@ -166,7 +166,7 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
         
         # Fetch and draw routes between supply (factories) and demand (stores)
         for u, v in graph.edges():
-            # Check if the edge connects a supply point (factory or warehouse) to a demand point (client)
+            # Check if the edge connects a supply point (factory or warehouse) to a demand point (store)
             if u in factories + warehouses and v in stores:
                 supply_point = u
                 demand_point = v
