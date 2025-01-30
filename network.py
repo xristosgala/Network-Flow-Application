@@ -11,7 +11,6 @@ import os
 
 st.title("Network Flow Application")
 st.header("1. Upload Your Datasets")
-st.write("hello")
 
 # Upload the three CSV files
 edges_data = st.file_uploader("Choose the Edges Data CSV file", type=["csv"])
@@ -31,7 +30,6 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
     factories = nodes_df[nodes_df["Type"] == "Factory"]["Node"].tolist()
     warehouses = nodes_df[nodes_df["Type"] == "Warehouse"]["Node"].tolist()
     stores = nodes_df[nodes_df["Type"] == "Store"]["Node"].tolist()
-    st.write(stores)
     pos = {row["Node"]: (row["Latitude"], row["Longitude"]) for _, row in coordinates_df.iterrows()}
     supply = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Supply"].iterrows()}
     demand = {row["Node"]: row["Quantity"] for _, row in demand_supply_df[demand_supply_df["Type"] == "Demand"].iterrows()}
@@ -169,43 +167,60 @@ if edges_data is not None and nodes_data is not None and coordinates_data is not
             "factory_to_store": "green",
         }
         
-        # Determine route type and assign color
+        # Normalize flow values for line thickness
+        max_flow = max(edge_flows[(u, v)].varValue for u, v in graph.edges() if edge_flows[(u, v)].varValue > 0)
+        min_thickness = 2
+        max_thickness = 8
+        
+        # Iterate over each edge in the graph
         for u, v in graph.edges():
-            if u in factories and v in warehouses:
-                route_type = "factory_to_warehouse"
-            elif u in warehouses and v in stores:
-                route_type = "warehouse_to_store"
-            elif u in factories and v in stores:
-                route_type = "factory_to_store"
-            else:
-                continue  # Skip unexpected cases
+            flow_value = edge_flows[(u, v)].varValue
         
-            route_color = route_colors[route_type]
+            if flow_value > 0:  # Only show active routes
+                # Determine route type
+                if u in factories and v in warehouses:
+                    route_type = "factory_to_warehouse"
+                elif u in warehouses and v in stores:
+                    route_type = "warehouse_to_store"
+                elif u in factories and v in stores:
+                    route_type = "factory_to_store"
+                else:
+                    continue  # Skip unexpected cases
         
-            # Fetch route and draw on map (use existing OpenRouteService logic)
-            try:
-                supply_coords = (pos[u][1], pos[u][0])  
-                demand_coords = (pos[v][1], pos[v][0])  
+                route_color = route_colors[route_type]
         
-                route = client.directions(
-                    coordinates=[supply_coords, demand_coords],
-                    profile='driving-car',
-                    format='geojson'
-                )
+                # Normalize line thickness based on flow
+                line_thickness = min_thickness + (flow_value / max_flow) * (max_thickness - min_thickness)
         
-                if 'features' in route and len(route['features']) > 0:
-                    route_coords = route['features'][0]['geometry']['coordinates']
-                    route_coords = [(coord[1], coord[0]) for coord in route_coords]
+                # Fetch route and draw on map
+                try:
+                    supply_coords = (pos[u][1], pos[u][0])  
+                    demand_coords = (pos[v][1], pos[v][0])  
         
-                    folium.PolyLine(
-                        locations=route_coords,
-                        color=route_color,
-                        weight=3,
-                        opacity=0.8,
-                        popup=f"Route from {u} to {v}"
-                    ).add_to(mymap)
-            except Exception as e:
-                print(f"Error processing route for {u} and {v}: {e}")
+                    route = client.directions(
+                        coordinates=[supply_coords, demand_coords],
+                        profile='driving-car',
+                        format='geojson'
+                    )
+        
+                    if 'features' in route and len(route['features']) > 0:
+                        route_coords = route['features'][0]['geometry']['coordinates']
+                        route_coords = [(coord[1], coord[0]) for coord in route_coords]
+        
+                        # Prepare popup with flow quantity
+                        popup_content = f"<b>Route {u} → {v}</b><br>Flow: {flow_value:.2f}"
+        
+                        # Draw the route with dynamic thickness
+                        folium.PolyLine(
+                            locations=route_coords,
+                            color=route_color,
+                            weight=line_thickness,
+                            opacity=0.8,
+                            popup=folium.Popup(popup_content, max_width=300)
+                        ).add_to(mymap)
+                except Exception as e:
+                    print(f"Error processing route for {u} and {v}: {e}")
+
 
         
         
